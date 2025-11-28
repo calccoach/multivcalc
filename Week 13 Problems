@@ -1,1 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vector Calculus Practice Problems (Interactive)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrF2muLHWesWqXqWq2y/i00+kE3lq1d1Fq2H1rF/Yw5g5R/q2lRjNn2O/yXo/k0" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-U/p9M8Y5/eJ1+9P+0L4JzG9C2y72G3f0G6W7J6zR6J8qY8P8L4+wB/5r0J1t8g/uQ" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-f7S1qgJb/J5P1E1n8P+u2jR/0q9G0T2/S8WJ+s1qG+G8R4t0T8G9J8P+0L0R6P/uQ" crossorigin="anonymous" defer onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}, {left: '\\[', right: '\\]', display: true}, {left: '\\(', right: '\\)', display: false}]});"></script>
+    <style>
+        /* Custom styles for the solution boxes */
+        .solution-box {
+            border-left: 5px solid;
+            padding: 1rem;
+            margin-top: 1rem;
+            background-color: #f8f8f8;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .hint {
+            border-color: #f59e0b; /* Amber */
+        }
+        .partial {
+            border-color: #3b82f6; /* Blue */
+        }
+        .full {
+            border-color: #10b981; /* Emerald */
+        }
+        .katex-display {
+            overflow-x: auto;
+            padding: 0.5em 0;
+        }
+        .question-content pre {
+            white-space: pre-wrap;
+            font-size: 0.9em;
+            background-color: #f0f0f0;
+            padding: 0.5em;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 p-6">
 
+    <header class="text-center mb-10">
+        <h1 class="text-4xl font-extrabold text-blue-800">Vector Calculus Practice Problems</h1>
+        <p class="text-xl text-gray-600 mt-2">Interactive solutions: Hint, Partial Steps, and Full Solution</p>
+    </header>
+
+    <main id="problems-container" class="space-y-12 max-w-4xl mx-auto">
+        </main>
+
+    <script>
+        // --- DATA STRUCTURE: Store all problems, hints, and solutions here ---
+        const problems = [
+            {
+                id: 1,
+                title: 'Vector Field Flux and Work (Problem 1)',
+                question: String.raw`
+                    Consider the vector field $\mathbf{F}(x,y) = \left( -x-y \right) \, \mathbf{i} + \left( x-y \right) \, \mathbf{j}$ and the curve $C$, the unit circle centered at the origin, oriented counter-clockwise.
+                    \textbf{(A) Concept Check:} Based on the visual geometry, determine the sign of the \textbf{Work} and the \textbf{Flux}.
+                    \textbf{(B) Computation:} Set up and evaluate the line integral to compute the total \textbf{Flux} across the curve $C$.
+                `,
+                hint: String.raw`
+                    \textbf{Hint (A):} Calculate the dot product of $\mathbf{F}$ with the normal vector $\mathbf{n}=\langle x, y \rangle$ for Flux, and with the tangent vector $\mathbf{T}=\langle -y, x \rangle$ for Work.
+                    \textbf{Hint (B):} Use the Divergence Theorem (Green's Second Form) to convert the Flux integral $\oint_C \mathbf{F} \cdot \mathbf{n} \, ds$ to a double integral over the unit disk $D$.
+                `,
+                partial: String.raw`
+                    \textbf{(A) Analysis:}
+                    1. Work: $\mathbf{F} \cdot \mathbf{T} = (-x-y)(-y) + (x-y)(x) = xy+y^2 + x^2-xy = x^2+y^2 = 1$. Since $\mathbf{F} \cdot \mathbf{T} > 0$, the Work is \textbf{Positive}.
+                    2. Flux: $\mathbf{F} \cdot \mathbf{n} = (-x-y)x + (x-y)y = -x^2-xy + xy-y^2 = -(x^2+y^2) = -1$. Since $\mathbf{F} \cdot \mathbf{n} < 0$, the Flux is \textbf{Negative}.
+
+                    \textbf{(B) Computation (Green's Theorem):}
+                    The divergence is $\nabla \cdot \mathbf{F} = \frac{\partial P}{\partial x} + \frac{\partial Q}{\partial y} = \frac{\partial}{\partial x}(-x-y) + \frac{\partial}{\partial y}(x-y) = -1 + (-1) = -2$.
+                    The Flux integral is $\iint_{D} (-2) \, dA$.
+                `,
+                solution: String.raw`
+                    \textbf{Final Answer (A):} Work is $\mathbf{Positive}$, Flux is $\mathbf{Negative}$.
+                    \textbf{Final Answer (B):}
+                    The region $D$ is the unit disk (Area = $\pi$).
+                    $$
+                    \text{Flux} = \iint_{D} (-2) \, dA = -2 \iint_{D} \, dA = -2 \cdot \text{Area}(D) = -2\pi(1)^2
+                    $$
+                    $$
+                    \text{Flux} = \mathbf{-2\pi}
+                    $$
+                `
+            },
+            {
+                id: 2,
+                title: 'Line Integral of a 1-Form (Problem 2)',
+                question: String.raw`
+                    Evaluate the path integral $\int_{\gamma} \alpha$, where $\alpha$ is the differential 1-form:
+                    \[
+                    \alpha = \left( \ln(x^2 + 1) - 18xy\sqrt{x^3+1} \right) \, dx + \left( \sin(e^y) + 4y^3 \right) \, dy
+                    \]
+                    and $\gamma$ is the boundary of the triangular region with vertices $(0,0)$, $(2,0)$, and $(2,1)$, traversed counter-clockwise.
+                `,
+                hint: String.raw`
+                    This is a closed curve integral. Use \textbf{Green's Theorem}: $\oint_{\gamma} P \, dx + Q \, dy = \iint_D \left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right) \, dA$. The structure of $P$ and $Q$ suggests the integrand will simplify drastically.
+                `,
+                partial: String.raw`
+                    1. \textbf{Calculate the Curl:}
+                    $P = \ln(x^2 + 1) - 18xy\sqrt{x^3+1}$ and $Q = \sin(e^y) + 4y^3$.
+                    $$
+                    \frac{\partial Q}{\partial x} = 0
+                    $$
+                    $$
+                    \frac{\partial P}{\partial y} = -18x\sqrt{x^3+1}
+                    $$
+                    The Green's integrand is $\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y} = 0 - (-18x\sqrt{x^3+1}) = 18x\sqrt{x^3+1}$.
+
+                    2. \textbf{Define Region $D$:} The triangle is defined by $0 \le x \le 2$ and $0 \le y \le x/2$.
+                    The integral is $\int_{0}^{2} \int_{0}^{x/2} 18x\sqrt{x^3+1} \, dy \, dx$.
+                    The inner integral simplifies to: $\int_{0}^{x/2} 18x\sqrt{x^3+1} \, dy = 18x\sqrt{x^3+1} \cdot \frac{x}{2} = 9x^2\sqrt{x^3+1}$.
+                    The final integral is $\int_{0}^{2} 9x^2\sqrt{x^3+1} \, dx$.
+                `,
+                solution: String.raw`
+                    The integral is solved using $u$-substitution: $u = x^3 + 1$, $du = 3x^2 \, dx$.
+                    $$
+                    I = \int_{0}^{2} 9x^2\sqrt{x^3+1} \, dx = \int_{1}^{9} 3\sqrt{u} \, du
+                    $$
+                    $$
+                    = 3 \left[ \frac{2}{3} u^{3/2} \right]_{1}^{9} = 2 \left[ 9^{3/2} - 1^{3/2} \right]
+                    $$
+                    $$
+                    = 2 (27 - 1) = 2(26) = \mathbf{52}
+                    $$
+                `
+            },
+            {
+                id: 3,
+                title: 'Vector Field Flux and Work (Problem 3)',
+                question: String.raw`
+                    Consider the vector field $\mathbf{F}(x,y) = \left( -x+y \right) \, \mathbf{i} + \left( -x-y \right) \, \mathbf{j}$ and the curve $C$, the unit circle centered at the origin, oriented counter-clockwise.
+                    \textbf{(A) Concept Check:} Based on the visual geometry, determine the sign of the \textbf{Work} and the \textbf{Flux}.
+                    \textbf{(B) Computation:} Set up and evaluate the line integral to compute the total \textbf{Flux} across the curve $C$.
+                `,
+                hint: String.raw`
+                    \textbf{Hint (A):} Use the dot product test: Work $\sim \mathbf{F} \cdot \mathbf{T}$ and Flux $\sim \mathbf{F} \cdot \mathbf{n}$.
+                    \textbf{Hint (B):} Use the Divergence Theorem (Green's Second Form) for Flux. $\nabla \cdot \mathbf{F} = \frac{\partial P}{\partial x} + \frac{\partial Q}{\partial y}$.
+                `,
+                partial: String.raw`
+                    \textbf{(A) Analysis:}
+                    1. Work (Circulation): $\mathbf{F} \cdot \mathbf{T} = (-x+y)(-y) + (-x-y)(x) = xy-y^2 - x^2-xy = -(x^2+y^2) = -1$. Since $\mathbf{F} \cdot \mathbf{T} < 0$, the Work is \textbf{Negative}.
+                    2. Flux (Flow): $\mathbf{F} \cdot \mathbf{n} = (-x+y)x + (-x-y)y = -x^2+xy - xy-y^2 = -(x^2+y^2) = -1$. Since $\mathbf{F} \cdot \mathbf{n} < 0$, the Flux is \textbf{Negative}.
+
+                    \textbf{(B) Computation (Green's Theorem):}
+                    The divergence is $\nabla \cdot \mathbf{F} = \frac{\partial P}{\partial x} + \frac{\partial Q}{\partial y} = \frac{\partial}{\partial x}(-x+y) + \frac{\partial}{\partial y}(-x-y) = -1 + (-1) = -2$.
+                    The Flux integral is $\iint_{D} (-2) \, dA$.
+                `,
+                solution: String.raw`
+                    \textbf{Final Answer (A):} Work is $\mathbf{Negative}$, Flux is $\mathbf{Negative}$.
+                    \textbf{Final Answer (B):}
+                    The region $D$ is the unit disk (Area = $\pi$).
+                    $$
+                    \text{Flux} = \iint_{D} (-2) \, dA = -2 \cdot \text{Area}(D) = -2\pi(1)^2
+                    $$
+                    $$
+                    \text{Flux} = \mathbf{-2\pi}
+                    $$
+                `
+            },
+            {
+                id: 4,
+                title: 'Line Integral of a 1-Form (Problem 4)',
+                question: String.raw`
+                    Evaluate the line integral of the differential 1-form $\alpha$ over the closed curve $\gamma$:
+                    $$\int_C \alpha, \quad \text{where } \alpha = \left(x^2 y\right)\,dx + \left(\frac{1}{3}x^3 + 4e^{2x}\right)\,dy$$
+                    and $\gamma$ is the boundary of the rectangular region $D$ defined by $0 \le x \le \ln(2)$ and $0 \le y \le 1$, traversed counterclockwise.
+                `,
+                hint: String.raw`
+                    The curve is a closed rectangle. Use \textbf{Green's Theorem}. The limits for the double integral are $0 \le x \le \ln(2)$ and $0 \le y \le 1$.
+                `,
+                partial: String.raw`
+                    1. \textbf{Calculate the Curl:}
+                    $P = x^2 y$ and $Q = \frac{1}{3}x^3 + 4e^{2x}$.
+                    $$
+                    \frac{\partial Q}{\partial x} = x^2 + 8e^{2x}
+                    $$
+                    $$
+                    \frac{\partial P}{\partial y} = x^2
+                    $$
+                    The Green's integrand is $\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y} = (x^2 + 8e^{2x}) - x^2 = 8e^{2x}$.
+
+                    2. \textbf{Set up the Integral:}
+                    $$
+                    I = \int_{0}^{\ln(2)} \int_{0}^{1} 8e^{2x} \, dy \, dx = \int_{0}^{\ln(2)} 8e^{2x} \left[ y \right]_{0}^{1} \, dx = \int_{0}^{\ln(2)} 8e^{2x} \, dx
+                    $$
+                `,
+                solution: String.raw`
+                    The final integral is:
+                    $$
+                    I = 8 \left[ \frac{1}{2} e^{2x} \right]_{0}^{\ln(2)} = 4 \left[ e^{2\ln(2)} - e^{0} \right]
+                    $$
+                    Using $e^{2\ln(2)} = e^{\ln(4)} = 4$:
+                    $$
+                    I = 4 (4 - 1) = 4(3) = \mathbf{12}
+                    $$
+                `
+            },
+            {
+                id: 5,
+                title: 'Scalar Path Integral (Problem 5)',
+                question: String.raw`
+                    Evaluate the scalar path integral
+                    $$\int_C 2\sqrt{1+x} \, ds$$
+                    where $C$ is the curve defined by $y = \frac{2}{3}x^{3/2}$ from $x=0$ to $x=3$.
+                `,
+                hint: String.raw`
+                    Convert the integral to a single variable integral in $x$ (or $t$). First, calculate the differential length element $ds = \sqrt{1 + (dy/dx)^2} \, dx$.
+                `,
+                partial: String.raw`
+                    1. \textbf{Find $ds$:}
+                    $$
+                    \frac{dy}{dx} = \frac{d}{dx}\left(\frac{2}{3}x^{3/2}\right) = x^{1/2} = \sqrt{x}
+                    $$
+                    $$
+                    ds = \sqrt{1 + (\sqrt{x})^2} \, dx = \sqrt{1 + x} \, dx
+                    $$
+                    2. \textbf{Set up the Integral:}
+                    $$
+                    \int_C 2\sqrt{1+x} \, ds = \int_{0}^{3} 2\sqrt{1+x} \cdot \sqrt{1+x} \, dx
+                    $$
+                    $$
+                    = \int_{0}^{3} 2(1+x) \, dx = \int_{0}^{3} (2 + 2x) \, dx
+                    $$
+                `,
+                solution: String.raw`
+                    The definite integral is:
+                    $$
+                    I = \left[ 2x + x^2 \right]_{0}^{3}
+                    $$
+                    $$
+                    I = (2(3) + 3^2) - (2(0) + 0^2) = 6 + 9 - 0 = \mathbf{15}
+                    $$
+                `
+            },
+            {
+                id: 6,
+                title: 'Circulation of a Vector Field (Problem 6)',
+                question: String.raw`
+                    Evaluate the circulation of the vector field
+                    $$
+                    \mathbf{F}(x, y) = y^2 \, \mathbf{i} + \left( \frac{1}{2} e^{x^2 + y} + 2xy \right) \, \mathbf{j}
+                    $$
+                    around the boundary $C$ of the rectangular region $D$ defined by $0 \le x \le \sqrt{\ln(5)}$ and $0 \le y \le \ln(5)$, traversed counterclockwise.
+                `,
+                hint: String.raw`
+                    This is a circulation integral over a closed rectangular boundary. Use \textbf{Green's Theorem} to evaluate $\iint_D \left(\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y}\right) \, dA$. Look for cancellation in the curl calculation.
+                `,
+                partial: String.raw`
+                    1. \textbf{Calculate the Curl:}
+                    $P = y^2$ and $Q = \frac{1}{2}e^{x^2+y} + 2xy$.
+                    $$
+                    \frac{\partial Q}{\partial x} = \frac{1}{2}(2x e^{x^2+y}) + 2y = x e^{x^2+y} + 2y
+                    $$
+                    $$
+                    \frac{\partial P}{\partial y} = 2y
+                    $$
+                    The Green's integrand is $\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y} = (x e^{x^2+y} + 2y) - 2y = x e^{x^2+y}$.
+
+                    2. \textbf{Set up the Integral:} Let $a = \sqrt{\ln(5)}$ and $b = \ln(5)$.
+                    $$
+                    I = \int_{0}^{a} \int_{0}^{b} x e^{x^2} e^y \, dy \, dx
+                    $$
+                    The inner integral is $\int_{0}^{b} x e^{x^2} e^y \, dy = x e^{x^2} \left[ e^y \right]_{0}^{b} = x e^{x^2} (e^{\ln(5)} - e^0) = 4x e^{x^2}$.
+                    The final integral is $I = \int_{0}^{\sqrt{\ln(5)}} 4x e^{x^2} \, dx$.
+                `,
+                solution: String.raw`
+                    The outer integral is solved using $u$-substitution: $u = x^2$, $du = 2x \, dx$.
+                    Limits change to $u_{min}=0$ and $u_{max}=(\sqrt{\ln(5)})^2 = \ln(5)$.
+                    $$
+                    I = \int_{0}^{\ln(5)} e^u (2 \, du) = 2 \left[ e^u \right]_{0}^{\ln(5)}
+                    $$
+                    $$
+                    I = 2 \left( e^{\ln(5)} - e^0 \right) = 2 (5 - 1)
+                    $$
+                    $$
+                    I = 2(4) = \mathbf{8}
+                    $$
+                `
+            },
+            {
+                id: 7,
+                title: 'Scalar Path Integral (Problem 7)',
+                question: String.raw`
+                    Evaluate the scalar path integral
+                    $$\int_C (x^3 + y) \, ds$$
+                    where $C$ is the curve given by $x=3t$ and $y=t^3$ for $0 \le t \le \sqrt[4]{3}$.
+                `,
+                hint: String.raw`
+                    Use the parameterization $\mathbf{r}(t) = \langle x(t), y(t) \rangle$ to express the integrand and $ds$ in terms of $t$.
+                    $ds = \sqrt{(x'(t))^2 + (y'(t))^2} \, dt$.
+                `,
+                partial: String.raw`
+                    1. \textbf{Find $ds$:}
+                    $x'(t) = 3$, $y'(t) = 3t^2$.
+                    $$
+                    ds = \sqrt{3^2 + (3t^2)^2} \, dt = \sqrt{9 + 9t^4} \, dt = 3\sqrt{1 + t^4} \, dt
+                    $$
+                    2. \textbf{Set up the Integral:}
+                    $f(x(t), y(t)) = (3t)^3 + t^3 = 27t^3 + t^3 = 28t^3$.
+                    $$
+                    I = \int_{0}^{3^{1/4}} (28t^3) \left( 3 \sqrt{1 + t^4} \right) \, dt = 84 \int_{0}^{3^{1/4}} t^3 \sqrt{1 + t^4} \, dt
+                    $$
+                    3. \textbf{U-Substitution:} Let $u = 1 + t^4$, then $\frac{1}{4}du = t^3 dt$.
+                    Limits: $t=0 \implies u=1$. $t=3^{1/4} \implies u=4$.
+                `,
+                solution: String.raw`
+                    Substituting into the integral:
+                    $$
+                    I = 84 \int_{1}^{4} \sqrt{u} \left( \frac{1}{4} \, du \right) = 21 \int_{1}^{4} u^{1/2} \, du
+                    $$
+                    $$
+                    = 21 \left[ \frac{2}{3} u^{3/2} \right]_{1}^{4} = 14 \left[ 4^{3/2} - 1^{3/2} \right]
+                    $$
+                    $$
+                    = 14 (8 - 1) = 14(7) = \mathbf{98}
+                    $$
+                `
+            },
+            {
+                id: 8,
+                title: 'Line Integral of a 1-Form (Problem 8)',
+                question: String.raw`
+                    Compute the value of the path integral
+                    $$
+                    \int_\gamma\left(\ln x+30 y^2\right) d x+\left(30 x^2-e^{2 y}\right) d y
+                    $$
+                    Where $\gamma$ is the boundary of the region between $y=x^2$ and $y=x$ in the first quadrant, traversed counterclockwise.
+                `,
+                hint: String.raw`
+                    The curve $\gamma$ is closed and positively oriented. Use \textbf{Green's Theorem}. The region $D$ is bounded by $y=x^2$ (bottom) and $y=x$ (top) from $x=0$ to $x=1$.
+                `,
+                partial: String.raw`
+                    1. \textbf{Calculate the Curl:}
+                    $P = \ln x + 30y^2$ and $Q = 30x^2 - e^{2y}$.
+                    $$
+                    \frac{\partial Q}{\partial x} = 60x \quad \text{and} \quad \frac{\partial P}{\partial y} = 60y
+                    $$
+                    The Green's integrand is $\frac{\partial Q}{\partial x} - \frac{\partial P}{\partial y} = 60x - 60y = 60(x - y)$.
+
+                    2. \textbf{Set up the Integral:}
+                    $$
+                    I = 60 \int_{0}^{1} \int_{x^2}^{x} (x - y) \, dy \, dx
+                    $$
+                    The inner integral is: $\int_{x^2}^{x} (x - y) \, dy = \left[ xy - \frac{y^2}{2} \right]_{x^2}^{x} = \frac{x^2}{2} - x^3 + \frac{x^4}{2}$.
+                    $$
+                    I = 60 \int_{0}^{1} \left( \frac{x^2}{2} - x^3 + \frac{x^4}{2} \right) \, dx
+                    $$
+                `,
+                solution: String.raw`
+                    The outer integral is:
+                    $$
+                    I = 60 \left[ \frac{x^3}{6} - \frac{x^4}{4} + \frac{x^5}{10} \right]_{0}^{1}
+                    $$
+                    $$
+                    I = 60 \left( \frac{1}{6} - \frac{1}{4} + \frac{1}{10} \right)
+                    $$
+                    Finding a common denominator (60):
+                    $$
+                    I = 60 \left( \frac{10}{60} - \frac{15}{60} + \frac{6}{60} \right) = 60 \left( \frac{1}{60} \right) = \mathbf{1}
+                    $$
+                `
+            }
+        ];
+
+        // --- JAVASCRIPT LOGIC ---
+
+        // Function to create the HTML for a single problem
+        function createProblemHTML(problem) {
+            return `
+                <div id="problem-${problem.id}" class="bg-white shadow-lg rounded-lg p-6 border-t-4 border-blue-500">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-4">Problem ${problem.id}: ${problem.title}</h2>
+                    
+                    <div class="question-content mb-4 text-gray-700">
+                        ${formatQuestion(problem.question)}
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-3 mb-4">
+                        <button onclick="revealSolution(${problem.id}, 'hint')" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-4 rounded transition duration-150">
+                            Show Hint 💡
+                        </button>
+                        <button onclick="revealSolution(${problem.id}, 'partial')" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded transition duration-150">
+                            Show Partial Solution 📝
+                        </button>
+                        <button onclick="revealSolution(${problem.id}, 'full')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 px-4 rounded transition duration-150">
+                            Show Full Solution ✅
+                        </button>
+                        <button onclick="hideSolutions(${problem.id})" class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded transition duration-150">
+                            Hide All ❌
+                        </button>
+                    </div>
+
+                    <div id="solution-container-${problem.id}" class="mt-4 space-y-4">
+                        </div>
+                </div>
+            `;
+        }
+
+        // Simple formatting helper for the question content
+        function formatQuestion(qText) {
+            // Replace \textbf, \newline, and basic list/alignment commands with HTML equivalents
+            qText = qText.replace(/\\textbf{([^}]+)}/g, '<strong>$1</strong>');
+            qText = qText.replace(/\\newline/g, '<br>');
+            qText = qText.replace(/\\begin{itemize}/g, '<ul>');
+            qText = qText.replace(/\\end{itemize}/g, '</ul>');
+            qText = qText.replace(/\\item/g, '<li>');
+            return qText;
+        }
+
+        // Function to reveal the solution step
+        function revealSolution(id, type) {
+            const problem = problems.find(p => p.id === id);
+            if (!problem) return;
+
+            const container = document.getElementById(`solution-container-${id}`);
+            const existingElement = document.getElementById(`${type}-solution-${id}`);
+            
+            // Clear or update the container
+            container.innerHTML = '';
+            
+            let content = '';
+            let title = '';
+            let className = '';
+
+            switch (type) {
+                case 'hint':
+                    content = problem.hint;
+                    title = 'Hint 💡';
+                    className = 'hint';
+                    break;
+                case 'partial':
+                    content = problem.partial;
+                    title = 'Partial Solution 📝';
+                    className = 'partial';
+                    break;
+                case 'full':
+                    content = problem.solution;
+                    title = 'Full Solution ✅';
+                    className = 'full';
+                    break;
+                default:
+                    return;
+            }
+
+            const newSolutionElement = document.createElement('div');
+            newSolutionElement.id = `${type}-solution-${id}`;
+            newSolutionElement.className = `solution-box ${className}`;
+            newSolutionElement.innerHTML = `
+                <h4 class="text-lg font-bold mb-2">${title}</h4>
+                <div class="solution-content">${content}</div>
+            `;
+            
+            container.appendChild(newSolutionElement);
+
+            // Re-render KaTeX in the new element
+            renderMathInElement(newSolutionElement, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true}, 
+                    {left: '\\[', right: '\\]', display: true}, 
+                    {left: '$', right: '$', display: false}, 
+                    {left: '\\(', right: '\\)', display: false}
+                ],
+                throwOnError : false
+            });
+        }
+
+        // Function to hide all solutions
+        function hideSolutions(id) {
+            document.getElementById(`solution-container-${id}`).innerHTML = '';
+        }
+
+        // Initialize the page by rendering all problems
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('problems-container');
+            problems.forEach(problem => {
+                container.innerHTML += createProblemHTML(problem);
+            });
+            
+            // Initial KaTeX rendering for the questions (only needed if auto-render wasn't used globally)
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true}, 
+                    {left: '\\[', right: '\\]', display: true}, 
+                    {left: '$', right: '$', display: false}, 
+                    {left: '\\(', right: '\\)', display: false}
+                ],
+                throwOnError : false
+            });
+        });
+    </script>
+
+</body>
+</html>
